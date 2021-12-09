@@ -37,17 +37,19 @@ class TestGenreService():
 
     def test_get_one(self):
         genre = self.genre_service.get_one(1)
-        assert genre != None
-        assert genre.id != None
+        assert isinstance(genre, Genre)
+        assert genre.id == 1
 
     def test_get_all(self):
         genres = self.genre_service.get_all()
-        assert len(genres)>0
+        for item in genres:
+            assert isinstance(item, Genre)
+        assert len(genres) > 0
 
     def test_create(self):
         genre_d = {"name":"name"}
         genre = self.genre_service.create(genre_d)
-        assert genre.id != None
+        assert isinstance(genre, Genre)
 
     def test_update(self):
         genre_d = {"name": "name"}

@@ -37,17 +37,19 @@ class TestDirectorService():
 
     def test_get_one(self):
         director = self.director_service.get_one(1)
-        assert director != None
-        assert director.id != None
+        assert isinstance(director, Director)
+        assert director.id == 1
 
     def test_get_all(self):
         directors = self.director_service.get_all()
-        assert len(directors)>0
+        for item in directors:
+            assert isinstance(item, Director)
+        assert len(directors) > 0
 
     def test_create(self):
         director_d = {"name":"name"}
         director = self.director_service.create(director_d)
-        assert director.id != None
+        assert isinstance(director, Director)
 
     def test_update(self):
         director_d = {"name": "name"}

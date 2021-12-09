@@ -10,19 +10,21 @@ from service.movie import MovieService
 
 
 @pytest.fixture
-def test_db():
+def test_db(*args, **kwargs):
     film1 = Movie(id=1, title="Film_1",
                   description="Lorem ipsum dolor",
                   trailer="http://youtube.com", year=2021,
-                  rating=9.9)
+                  rating=9.9, genre_id=1, director_id=1)
     film2 = Movie(id=2, title="Film_2",
                   description="Lorem ipsum dolor",
                   trailer="http://youtube.com", year=2021,
-                  rating=9.9)
+                  rating=9.9, genre_id=1, director_id=1)
     film3 = Movie(id=3, title="Film_3",
                   description="Lorem ipsum dolor",
                   trailer="http://youtube.com", year=2021,
-                  rating=9.9)
+                  rating=9.9, genre_id=1, director_id=1)
+    if kwargs["id"]:
+        return film3
     return {"1": film1, "2": film2, "3": film3}
 
 @pytest.fixture
@@ -31,16 +33,16 @@ def movie_dao():
     film1 = Movie(id=1, title="Film_1",
                   description="Lorem ipsum dolor",
                   trailer="http://youtube.com", year=2021,
-                  rating=9.9)
+                  rating=9.9, genre_id=1, director_id=1)
     film2 = Movie(id=2, title="Film_2",
                   description="Lorem ipsum dolor",
                   trailer="http://youtube.com", year=2021,
-                  rating=9.9)
+                  rating=9.9, genre_id=1, director_id=1)
     film3 = Movie(id=3, title="Film_3",
                   description="Lorem ipsum dolor",
                   trailer="http://youtube.com", year=2021,
-                  rating=9.9)
-    movie_dao.get_one = MagicMock(return_value=film1)
+                  rating=9.9, genre_id=1, director_id=1)
+    movie_dao.get_one = MagicMock(return_value=film3)
     movie_dao.get_all = MagicMock(return_value=[film1, film2, film3])
     movie_dao.create = MagicMock(return_value=Movie(id=4))
     movie_dao.delete = MagicMock()
@@ -54,18 +56,20 @@ class TestMovieService():
             self.movie_service = MovieService(dao=movie_dao)
 
     def test_get_one(self):
-        movie = self.movie_service.get_one(1)
-        assert movie != None
-        assert movie.id != None
+        movie = self.movie_service.get_one(3)
+        assert isinstance(movie, Movie)
+        assert movie.id == 3
 
     def test_get_all(self):
         movies = self.movie_service.get_all()
+        for item in movies:
+            assert isinstance(item, Movie)
         assert len(movies)>0
 
     def test_create(self):
         movie_d = {"name":"name"}
         movie = self.movie_service.create(movie_d)
-        assert movie.id != None
+        assert isinstance(movie, Movie)
 
     def test_update(self):
         movie_d = {"name": "name"}
